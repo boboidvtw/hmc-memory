@@ -1,0 +1,44 @@
+{
+  "name": "@boboidvtw/hmc-memory",
+  "version": "0.1.0",
+  "description": "Hierarchical Memory Compression for AI agents — cross-platform, MCP-first, daily/chunk/monthly/yearly auto-compression",
+  "type": "module",
+  "bin": {
+    "hmc-memory": "./bin/cli.js"
+  },
+  "exports": {
+    ".": "./src/core/index.js",
+    "./mcp": "./src/mcp/server.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "templates"
+  ],
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "claude-code",
+    "mcp",
+    "memory",
+    "ai-agent",
+    "hierarchical-compression"
+  ],
+  "author": "boboidvtw",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/boboidvtw/hmc-memory"
+  }
+}
