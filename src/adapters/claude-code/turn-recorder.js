@@ -81,13 +81,29 @@ async function main() {
 
   if (!assistantMsg && !userMsg) process.exit(0)
 
-  recordPair({
-    userText:      userMsg      || '',
-    assistantText: assistantMsg || '',
-    platform: 'claude-code',
-  })
+  const userText      = userMsg      || ''
+  const assistantText = assistantMsg || ''
+
+  recordPair({ userText, assistantText, platform: 'claude-code' })
 
   try { buildIndex() } catch { /* 靜默 */ }
+
+  // ── 提醒意圖自動偵測 ──────────────────────────────────────────────────────
+  try {
+    const { quickScan, extractReminder } = await import('../../core/reminder-detector.js')
+    const { createReminder }             = await import('../../core/reminder.js')
+
+    const combined = `${userText} ${assistantText}`
+    if (quickScan(combined)) {
+      const reminder = await extractReminder({ userText, assistantText })
+      if (reminder) {
+        const result = createReminder(reminder)
+        process.stderr.write(
+          `[HMC] 自動建立提醒: ${reminder.description} → ${result.taskId}\n`
+        )
+      }
+    }
+  } catch { /* 提醒偵測失敗不影響主流程 */ }
 }
 
 main().catch(() => process.exit(0))
