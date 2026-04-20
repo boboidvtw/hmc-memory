@@ -9,6 +9,8 @@
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-success)](package.json)
 [![MCP Compatible](https://img.shields.io/badge/MCP-compatible-blueviolet)](https://modelcontextprotocol.io)
 
+[English](./README.md) | [繁體中文](./README-ZH.md)
+
 ---
 
 ## What Is This?
@@ -345,6 +347,22 @@ Find the first incomplete task ([ ]) and start there.
 
 ---
 
+## Related Projects
+
+### MAMGA-Local
+**[https://github.com/boboidvtw/MAMGA-Local](https://github.com/boboidvtw/MAMGA-Local)**
+
+Multi-Graph based Agentic Memory for Local AI — a four-graph memory architecture (Temporal, Semantic, Causal, Entity) designed for local LLMs.
+
+HMC-Memory's roadmap includes MAMGA-Local integration (Phase 7), which will upgrade search from keyword matching to **vector semantic search** and **multi-hop graph reasoning**:
+
+```
+Current:  HMC-Memory → keyword search over Markdown files
+Future:   HMC-Memory → MAMGA-Local → semantic search + graph reasoning
+```
+
+---
+
 ## Roadmap
 
 - [x] Core recording (daily files)
@@ -355,7 +373,7 @@ Find the first incomplete task ([ ]) and start there.
 - [x] Generic HTTP webhook adapter
 - [x] Zero npm dependencies
 - [x] Multi-backend LLM support
-- [ ] MAMGA-local integration (semantic / graph search)
+- [ ] MAMGA-Local integration (semantic / graph search) — [MAMGA-Local](https://github.com/boboidvtw/MAMGA-Local)
 - [ ] Web UI for browsing memory layers
 - [ ] npm publish (`npx @boboidvtw/hmc-memory install`)
 
