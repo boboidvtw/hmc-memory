@@ -261,14 +261,24 @@ npx @boboidvtw/hmc-memory uninstall            # 移除 hooks，保留資料
 ## 目前進度
 
 ```
-Phase 1 [ ] 未開始
-Phase 2 [ ] 未開始
-Phase 3 [ ] 未開始
-Phase 4 [ ] 未開始
-Phase 5 [ ] 未開始
-Phase 6 [ ] 未開始
-Phase 7 [ ] 未開始（選配）
+Phase 1 [✅] 完成 — storage / recorder / adapters / cli/install
+Phase 2 [✅] 完成 — llm-adapter / compress / scheduler / templates
+Phase 3 [✅] 完成 — search / buildIndex / getStats
+Phase 4 [✅] 完成 — mcp/server.js (5 tools, zero-dependency stdio)
+Phase 5 [✅] 完成 — generic/webhook.js (HTTP POST /record /session /compress)
+Phase 6 [✅] 完成 — bin/cli.js / git commit / GitHub repo 建立並推送
+              GitHub: https://github.com/boboidvtw/hmc-memory
+              待辦: npm publish (需要 npm 帳號 token)
+Phase 7 [ ] 未開始（選配）— MAMGA 整合
 ```
+
+## 驗收測試結果（2026-04-20）
+
+- storage.js ✅ 路徑正確，Windows ~/.hmc 目錄正常建立
+- recorder.js ✅ daily 檔案寫入、Session Summary 格式正確
+- search.js ✅ buildIndex + 關鍵字搜尋正常回傳結果
+- CLI ✅ status / search / today / help 全部正常輸出
+- git ✅ 初始 commit 完成，推上 GitHub
 
 ---
 
