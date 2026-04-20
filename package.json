@@ -19,12 +19,8 @@
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "lint": "eslint src"
   },
-  "dependencies": {
-    "dotenv": "^16.4.5"
-  },
-  "devDependencies": {
-    "jest": "^29.7.0"
-  },
+  "dependencies": {},
+  "devDependencies": {},
   "engines": {
     "node": ">=18.0.0"
   },

@@ -7,6 +7,10 @@
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { loadEnv } from './env.js'
+
+// 最早載入環境變數（其他模組 import storage 時自動觸發）
+loadEnv()
 
 // 解析 ~/.hmc 路徑（支援 Windows / Unix）
 function resolveHmcDir() {
