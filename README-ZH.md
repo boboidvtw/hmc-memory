@@ -1,5 +1,8 @@
 # HMC-Memory
 
+> 🛸 **本專案由 [Claude Code](https://claude.ai/claude-code)（Sonnet 4.6）全程全權設計開發——從架構規劃到程式實作，從零到完成，一手包辦。**
+> [boboidvtw](https://github.com/boboidvtw) 只有出點子和想法。
+
 **AI Agent 階層式記憶壓縮系統**
 
 > 自動記錄每一次 AI 對話，並將每日記錄壓縮成週摘要、月摘要與年度回顧 — 全部可搜尋、全部在本地、除了 Node.js 和你的 LLM 之外零依賴。

@@ -1,5 +1,8 @@
 # HMC-Memory
 
+> 🛸 **This project was entirely designed and developed by [Claude Code](https://claude.ai/claude-code) (Sonnet 4.6) — from architecture to implementation, zero to production.**
+> [boboidvtw](https://github.com/boboidvtw) contributed the ideas and vision only.
+
 **Hierarchical Memory Compression for AI Agents**
 
 > Automatically record every AI conversation, then compress daily logs into weekly summaries, monthly digests, and yearly retrospectives — all searchable, all local, zero dependencies beyond Node.js and your LLM.
