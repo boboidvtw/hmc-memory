@@ -56,11 +56,16 @@ async function main() {
 
   const { recordSessionSummary, checkAndRun, buildIndex } = core
 
-  // 從 hook input 提取摘要資訊
-  const summary = extractSummary(sessionData)
+  // 嘗試寫入完整 transcript（逐字對話）
+  const { recordPair } = await import('../../core/recorder.js')
+  const saved = saveTranscript(sessionData, recordPair)
 
-  if (summary) {
-    recordSessionSummary({ summary, platform: 'claude-code' })
+  // 若沒有 transcript，fallback 到摘要
+  if (!saved) {
+    const summary = extractSummary(sessionData)
+    if (summary) {
+      recordSessionSummary({ summary, platform: 'claude-code' })
+    }
   }
 
   // 更新搜尋索引
@@ -75,6 +80,53 @@ async function main() {
 
   // 輸出原始 input（Claude Code hook 要求）
   if (hookInput) process.stdout.write(hookInput)
+}
+
+/**
+ * 從 content 欄位取出純文字（string 或 array 都能處理）
+ */
+function extractText(content) {
+  if (typeof content === 'string') return content.trim()
+  if (Array.isArray(content)) {
+    return content
+      .filter(c => c.type === 'text')
+      .map(c => c.text || '')
+      .join('\n')
+      .trim()
+  }
+  return ''
+}
+
+/**
+ * 將完整 transcript 寫入 daily 檔（每對話一筆）
+ * @param {object} data   hook stdin JSON
+ * @param {Function} recordPair
+ * @returns {boolean} 是否成功寫入
+ */
+function saveTranscript(data, recordPair) {
+  const transcript = data.transcript || data.messages || []
+  if (transcript.length === 0) return false
+
+  // 依序配對 user + assistant，逐對寫入
+  let i = 0
+  let written = 0
+  while (i < transcript.length) {
+    const msg = transcript[i]
+    if (msg.role === 'user') {
+      const userText = extractText(msg.content)
+      const next = transcript[i + 1]
+      const assistantText = next?.role === 'assistant' ? extractText(next.content) : ''
+      if (userText || assistantText) {
+        recordPair({ userText, assistantText, platform: 'claude-code' })
+        written++
+      }
+      i += next?.role === 'assistant' ? 2 : 1
+    } else {
+      i++
+    }
+  }
+
+  return written > 0
 }
 
 /**

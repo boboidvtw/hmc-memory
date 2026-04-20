@@ -29,9 +29,13 @@ Most AI assistants forget everything the moment a session ends. HMC-Memory solve
 **How it works:**
 
 ```
-Every session ends
+Every turn ends  (Stop hook — turn-recorder.js)
        ↓
-  Daily file written  (~/.hmc/daily/2026-04-20.md)
+  Verbatim user + assistant pair written to daily file
+       ↓
+Every session ends  (SessionEnd hook — hook.js)
+       ↓
+  Full transcript saved (fallback) + compression triggered
        ↓  every 3 days
   Chunk summary       (~/.hmc/chunks/2026-04-18_to_2026-04-20.md)
        ↓  every month
@@ -46,6 +50,7 @@ All compression is done by your local LLM (LM Studio, Ollama, etc.) — no data 
 
 ## Key Features
 
+- **Verbatim capture** — a Stop hook records every user/assistant turn word-for-word as it happens, in real time
 - **Automatic recording** — hooks into Claude Code's session lifecycle; fires silently in the background
 - **Hierarchical compression** — daily → 3-day chunk → monthly → yearly, each level summarized by AI
 - **Cross-layer search** — keyword search across all levels at once
@@ -98,7 +103,8 @@ node bin/cli.js install
 
 This will:
 - Create the `~/.hmc/` directory structure
-- Inject a `SessionEnd` hook into `~/.claude/settings.json` (Claude Code)
+- Inject a **Stop hook** (`turn-recorder.js`) — captures every turn verbatim, in real time
+- Inject a **SessionEnd hook** (`hook.js`) — writes full transcript at session end + triggers compression
 - Register the MCP server so Claude can call memory tools directly
 
 ### 4. Verify
@@ -151,6 +157,19 @@ All memory lives in `~/.hmc/`:
 ```
 
 Every file is plain Markdown — readable in any editor, searchable with any tool.
+
+---
+
+## Recording: What Gets Captured
+
+HMC-Memory uses **two hooks** running in parallel:
+
+| Hook | When | What is written |
+|------|------|-----------------|
+| **Stop** (`turn-recorder.js`) | After every assistant response | The latest user message + assistant reply, verbatim |
+| **SessionEnd** (`hook.js`) | When the session ends | Full transcript (all turns) as a safety net; triggers compression |
+
+The Stop hook is the primary recorder — each turn is written immediately. The SessionEnd hook catches any turns that the Stop hook may have missed (e.g., on unexpected termination) and then triggers the compression scheduler.
 
 ---
 
@@ -308,7 +327,7 @@ All prompts are in the `templates/` directory and can be customized.
 
 | Platform | Recording | MCP Tools | Notes |
 |----------|-----------|-----------|-------|
-| **Claude Code** | ✅ Auto via SessionEnd hook | ✅ | Primary platform |
+| **Claude Code** | ✅ Verbatim per-turn (Stop hook) + full transcript (SessionEnd hook) | ✅ | Primary platform |
 | **Any MCP platform** | Manual / webhook | ✅ | MCP server included |
 | **Any HTTP platform** | ✅ via webhook POST | ❌ | Use generic adapter |
 | **CLI / scripts** | ✅ `node bin/cli.js` | — | Direct use |
@@ -327,9 +346,17 @@ Every daily file follows this structure:
 ---
 
 ## 09:32 `[claude-code]`
+**👤 User**
+
+Why does HMC-Memory use a MCP-first architecture?
+
+---
+
+## 09:32 `[claude-code]`
 **🤖 Assistant**
 
-We decided to use the MCP-first architecture with platform adapters...
+Because MCP (Model Context Protocol) is the universal tool-calling protocol
+across all major AI platforms — one core, every platform supported.
 
 ---
 
@@ -378,7 +405,7 @@ Future:   HMC-Memory → MAMGA-Local → semantic search + graph reasoning
 - [x] Hierarchical compression (chunk / monthly / yearly)
 - [x] Cross-layer keyword search
 - [x] MCP server (5 tools)
-- [x] Claude Code adapter (SessionEnd hook)
+- [x] Claude Code adapter (SessionEnd hook + Stop hook for verbatim capture)
 - [x] Generic HTTP webhook adapter
 - [x] Zero npm dependencies
 - [x] Multi-backend LLM support
